@@ -1,0 +1,5 @@
+
+
+path "*" {
+  capabilities = ["read","update"]
+}
