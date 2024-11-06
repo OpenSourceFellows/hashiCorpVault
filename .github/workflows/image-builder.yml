@@ -1,0 +1,27 @@
+name: ImageBuilder
+# Run this workflow every time a new commit pushed to your repository
+on: push
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Vault-github integration
+    permissions:
+        contents: read
+        id-token: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Import Secrets
+        id: secretdata
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: https://vault-public-vault-22deb760.8ee49bbe.z1.hashicorp.cloud:8200
+          role: demo
+          method: jwt
+          namespace: admin
+          secrets: |
+            secrets/data/ci app_secret
+      - name: Build Docker Image
+        run: docker build . --file Dockerfile --build-arg app_secret="${{ env.APP_SECRET }}" -t    vault-action-exampleapp
+      - name: read secret from container
+        run: docker run vault-action-exampleapp /bin/bash -c "cat ./app_secret" | sed 's/./& /g'
