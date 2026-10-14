@@ -1,4 +1,4 @@
-# ProgramEquity Vault Lab
+# ProgramEarth Vault Lab
 - Default Setup
 - Setup for SBOMs
 
